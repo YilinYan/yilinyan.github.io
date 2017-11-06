@@ -43,11 +43,11 @@ blockquote { color: #828282; border-left: 4px solid #e8e8e8; padding-left: 15px;
 blockquote > :last-child { margin-bottom: 0; }
 
 /** Code formatting */
-pre, code { font-size: 15px; border: 1px solid #e8e8e8; border-radius: 3px; background-color: #eef; }
+pre, code { font-size: 15px; border: 1px solid #050505; border-radius: 3px; background-color: #050505; }
 
-code { padding: 1px 5px; }
+code { padding: 1px 5px; color: #b0b0b0; }
 
-pre { padding: 8px 12px; overflow-x: auto; }
+pre { padding: 8px 12px; overflow-x: auto; color: #808080; }
 pre > code { border: 0; padding-right: 0; padding-left: 0; }
 
 /** Wrapper */
@@ -135,7 +135,7 @@ nav-bar
 
 /** Syntax highlighting styles */
 .highlight { background: #fff; }
-.highlighter-rouge .highlight { background: #eef; }
+.highlighter-rouge .highlight { background: #050505; }
 .highlight .c { color: #998; font-style: italic; }
 .highlight .err { color: #a61717; background-color: #e3d2d2; }
 .highlight .k { font-weight: bold; }
