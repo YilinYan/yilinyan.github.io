@@ -8,7 +8,8 @@
 #canvas {
     position: absolute;
     left: 50%;
-    top: 200px;
+    margin-left: -500px;
+    top: 100px;
 }
 
 /** Reset some basic elements */

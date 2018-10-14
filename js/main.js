@@ -1,7 +1,6 @@
 function setup() {
-    var canvas = createCanvas(700, 500);
+    var canvas = createCanvas(1000, 500);
     canvas.parent("canvas");
-    canvas.width = window.innerWidth;
     background (0);
 }
 
