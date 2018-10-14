@@ -197,3 +197,9 @@ nav-bar
 .highlight .vg { color: #008080; }
 .highlight .vi { color: #008080; }
 .highlight .il { color: #099; }
+
+
+#canvas {
+    left: 50%;
+    margin-left: -350px;
+}
