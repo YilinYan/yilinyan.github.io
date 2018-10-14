@@ -3,7 +3,6 @@ var time = 0;
 var a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
 
 function setup() {
-<<<<<<< HEAD
     var canvas = createCanvas(1000, 550, WEBGL);
     canvas.parent("canvas");
     background (0);
@@ -74,22 +73,4 @@ function draw() {
 //    pg.endDraw();
 //    image(pg, 640, 360);
 
-=======
-/*
-    var canvas = createCanvas(700, 500);
-    canvas.parent("canvas");
-    background (0);
-    */
-}
-
-function draw() {
-    /*
-    if (mouseIsPressed) {
-      fill(0);
-    } else {
-      fill(255);
-    }
-    ellipse(mouseX, mouseY, 80, 80);
-    */
->>>>>>> 991ae39ccecfa07bb8f4f5d9a7e5ef0cc8e9ecd5
 }
