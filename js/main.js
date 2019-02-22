@@ -1,107 +1,72 @@
-var pg;
-var time = 0, lastX = 0, lastY = 0, deltaX = 0, deltaY = 0, rotX = 0;
-//var a = 0, b = 0, c = 0, d = 0, e = 0, f = 0, g =0;
-var flag = false
-var lastTime = 0, rotV = 0, rotA = 0
+const scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
+camera.position.x = camera.position.z = 1.2
+camera.position.y = 0.5
+camera.lookAt(new THREE.Vector3(0,0,0))
+var renderer = new THREE.WebGLRenderer({ alpha: true, depth: true });
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setClearColor('#000000');
+canvas = renderer.domElement;
+canvas.setAttribute('background', '#000000');
+document.body.appendChild( canvas );
 
-function setup() {
-    var canvas = createCanvas(window.innerWidth, 550, WEBGL);
-    canvas.parent("canvas")
-    background (0);
-    noCursor();
-    pg = createGraphics(1000, 550, WEBGL);
+// create material
+const lengthSeg = 200;
+const curveSides = 10;
+const glslify = require( 'glslify' );
+const vShader = glslify( './curve.vert' );
+const fShader = glslify( './curve.frag' );
+const totalMeshes = 200;
+const baseMaterial = new THREE.RawShaderMaterial({
+  vertexShader: vShader,
+  fragmentShader: fShader,
+  side: THREE.FrontSide,
+  transparent: true,
+  extensions: {
+    deriviatives: true
+  },
+  defines: {
+    PI: Math.PI,
+    TOTAL_SEGMENTS: lengthSeg,
+    TOTAL_MESHES: totalMeshes,
+  },
+  uniforms: {
+    thickness: { type: 'f', value: 0.01 },
+    time: { type: 'f', value: 0 },
+    size: { type: 'f', value: 4.0 },
+    sscolor: { type: 'c', value: new THREE.Color('#222262') },
+    index: { type: 'f', value: 0 }
+  }
+});
 
-    var cnv = document.getElementById ("canvas")
-    cnv.onmouseenter = function() {
-        flag = true
-        lastX = mouseX
-        lastY = mouseY
-    }
-    cnv.onmouseleave = function() {
-        flag = false
-        rotA = 0
-    }
+// create meshes
+const myRand = (a, b) => { return Math.random() * (b - a) + a; };
+const createCurve = require( './createCurve.js' );
+const geometry = createCurve( curveSides, lengthSeg );
+const meshContainer = new THREE.Object3D();
+const meshes = new Array(totalMeshes).fill(null).map((_, i) => {
+  const material = baseMaterial.clone();
+  material.uniforms = THREE.UniformsUtils.clone(material.uniforms);
+  material.uniforms.index.value = i;
+  material.uniforms.thickness.value = myRand(0.001, 0.002);  // random thickness
+
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.frustumCulled = false;
+  meshContainer.add(mesh);
+  return mesh;
+});
+scene.add(meshContainer);
+
+// animate
+var timeNow = Date.now();
+function animate() {
+  requestAnimationFrame( animate );
+  renderer.render( scene, camera );
+
+  var dt = (Date.now() - timeNow) / 1000.0;
+  timeNow = Date.now();
+  meshes.forEach((mesh) => {
+    mesh.material.uniforms.time.value += dt;
+  });
 }
-
-function mouseMoved() {
-    if (flag == false) return
-    if (Date.now() - lastTime < 0.2) return
-    rotA = mouseY - lastY
-    rotV -= rotA / 500 / (Date.now() - lastTime)
-    lastX = mouseX
-    lastY = mouseY
-    lastTime = Date.now()
-}
-
-function draw() {
-    var lag = rotV * 0.05
-    rotV -= lag
-    rotX += rotV
-    if (Math.abs(rotX) > 0.01)
-        rotX -= rotX * 0.01
-    time += 0.005;
-
-    background (0);
-    translate(sin(time) * 100 - 50, 0, 0);
-    rotateX(PI/3 + rotX);
-//    rotateY(PI/10);
-
-    stroke(255);
-    noFill();
-
-    for(var x = -width/2, i = 0; x < width/2; ++i, x += noise(i) * 40 + 20)
-    {
-      strokeWeight(noise(x) / 2 + 0.2);
-      beginShape();
-      var len = height/2 + (noise (x, x) - 0.5) * 100;
-      for(var y = -len; y < len; y+=10)
-      {
-          vertex(x, y, (noise(x/100.0 + time, y/100.0+10000 + time)*120.0));
-      }
-      endShape();
-    }
-
-
-    for(var y = -height/2 ; y < height/2 - 100; y += 40)
-    {
-      strokeWeight(noise(y) * 1.4);
-      beginShape();
-      var len = noise (y) * 1000;
-      var a = -width/2 + sin(time + noise (y) * 1000) * 1000
-                        + noise (y) * 1000;
-      var b = a + len;
-      for(var x = a; x < b; x += 5)
-      {
-//          vertex(x, y, (noise(y/100.0+10000 + time, x/100.0 + time)*120.0));
-        vertex(x, y, (noise(x/100.0 + time, y/100.0+10000 + time)*220.0) + 50);
-      }
-      endShape();
-    }
-
-/*
-    a += noise(time) - 0.5;
-    b += noise(time+10000) - 0.5;
-    c = noise(a/100.0 + time, b/100.0+10000 + time)*120.0;
-
-    d += noise(time+20000) - 0.5;
-    e += noise(time+30000) - 0.5;
-    f = noise(d/100.0 + time, e/100.0+10000 + time)*120.0;
-*/
-/*
-    stroke(255, 10, 10);
-//    lights();
-    translate(a, b, c);
-    sphere(10);
-
-    translate(-a, -b, -c);
-
-    stroke(10, 10, 150);
-//    lights();
-    translate(d, e, f);
-    sphere(10);
-*/
-
-//    pg.endDraw();
-//    image(pg, 640, 360);
-
-}
+animate();

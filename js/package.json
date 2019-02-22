@@ -1,0 +1,30 @@
+{
+  "name": "yilinyan.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "semistandard": {
+    "global": [
+      "THREE"
+    ]
+  },
+  "author": {
+    "name": "Yilin Yan",
+    "email": "yilinyan1030@gmail.com",
+    "url": "https://github.com/yilinyan"
+  },
+  "dependencies": {
+    "glsl-face-normal": "^1.0.2",
+    "glslify": "^2.0.0",
+    "glslify-hex": "^2.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/YilinYan/yilinyan.github.io.git"
+  },
+  "glslify": {
+    "transform": [
+      "glslify-hex"
+    ]
+  }
+}
