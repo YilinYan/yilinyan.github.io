@@ -3,7 +3,4 @@
 *old.js
 node_modules*
 *main.js
-*curve.frag
-*curve.vert
-*createCurve.js
 Makefile
