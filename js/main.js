@@ -18,7 +18,7 @@ const curveSides = 10;
 const glslify = require( 'glslify' );
 const vShader = glslify( './curve.vert' );
 const fShader = glslify( './curve.frag' );
-const totalMeshes = 200;
+const totalMeshes = 300;
 const baseMaterial = new THREE.RawShaderMaterial({
   vertexShader: vShader,
   fragmentShader: fShader,
@@ -36,7 +36,7 @@ const baseMaterial = new THREE.RawShaderMaterial({
     thickness: { type: 'f', value: 0.01 },
     time: { type: 'f', value: 0 },
     size: { type: 'f', value: 4.0 },
-    sscolor: { type: 'c', value: new THREE.Color('#222262') },
+    sscolor: { type: 'c', value: new THREE.Color('#222242') },
     index: { type: 'f', value: 0 },
     cameraPos: { type: 'vec3', value: new THREE.Vector3(cameraPos[0], cameraPos[1], cameraPos[2]) },
   }

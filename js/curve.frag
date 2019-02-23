@@ -33,14 +33,15 @@ float noise(vec2 p) {
 
 void main () {
   vec3 normal = vNormal;
-  // vec3 lightDirec = normalize(vec3(10.0, -2.0, 6.0));
-  vec3 lightDirec = normalize(vec3(1.2, 4., 1.2));
+  vec3 lightDirec = normalize(vec3(-0.0, 1.0, -1.0) - vVertPos);
+  // vec3 lightDirec = normalize(cameraPos - vVertPos);
   float diffuse = clamp(dot(lightDirec, normal), 0.0, 1.0);
+  diffuse = pow(diffuse, 0.2);
   float ambient = dot(lightDirec, normal) * 0.5 + 0.5;
 
   vec3 col = vec3(0.0);
   col += diffuse * vec3(0.1, 0.1, 1.0) * sscolor;
-  col += ambient * vec3(0.3, 0.1, 0.1) * sscolor;
+  col += ambient * vec3(0.4, 0.1, 0.1) * sscolor;
 
   // add some fake rim lighting
   vec3 view = normalize(cameraPos - vVertPos);
@@ -51,7 +52,8 @@ void main () {
 
   // back light
   // float diffuse2 = clamp(dot(-lightDirec, normal), 0.0, 1.0);
-  // col += diffuse2 * vec3(0.7, 0.1, 0.1) * sscolor;
+  // diffuse2 = pow(diffuse2, 4.0);
+  // col += diffuse2 * vec3(0.3, 0.1, 0.1) * sscolor;
 
   // tone map
   col = col / (vec3(1.0) + col);
@@ -63,7 +65,7 @@ void main () {
   // cut into segments
   // alpha *= sign(fract((vPosition + 0.5) * 12.0 + vIndex / 40. * 2.0 + vTime / 4.) - 0.5);
   // alpha *= pow(noise(8.0*vec2(vPosition, 1024.0*vIndex/float(TOTAL_MESHES))), 3.0);
-  float alpha = pow(1.0 - clamp(dot(view, normal), 0.0, 1.0), 2.0);
-
-  gl_FragColor = vec4(col, 1.0);
+  float alpha = pow(1.0 - clamp(dot(view, normal), 0.0, 1.0), 1.8);
+  if(length(vVertPos.z) < 0.4) alpha *= vVertPos.z * 2.5;
+  gl_FragColor = vec4(col, alpha);
 }
