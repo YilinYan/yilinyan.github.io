@@ -45,20 +45,54 @@ float noise(vec2 p) {
     w.y);
 }
 
-vec3 sample (float t) {
-  vec3 ret = vec3(t, 0.14 * noise(vec2(-time/4.) + 8.0 * vec2(t, index / float(TOTAL_MESHES))), index / float(TOTAL_MESHES));
-  if(int(index) > int(index) / 2 * 2) return ret.xyz;
-  return vec3(ret.z, 0.14 * noise(vec2(-time/4.) + 8.0 * vec2(ret.z, ret.x)), ret.x);;
+void noised(vec2 x, out float value, out vec3 derivative) {
+    vec2 p = floor(x);
+    vec2 w = fract(x);
+    vec2 u = w * w * (3. - 2. * w);
+    vec2 du = 6. * w * (1. - w);
+
+    float a = hash( p+vec2(0,0) );
+    float b = hash( p+vec2(1,0) );
+    float c = hash( p+vec2(0,1) );
+    float d = hash( p+vec2(1,1) );
+
+    float k0 =  a;
+    float k1 =  - a + b;
+    float k2 =  a - b - c + d;
+    float k3 =  - a + c;
+    float k4 =  a - b - c + d;
+
+    // value = k0 + k1 * u.x + k3 * u.y + k2 * u.x * u.y;
+    value = noise(x);
+    vec2 deri = du * vec2(k1 + k2 * u.y, k3 + k4 * u.x);
+    derivative =  normalize(vec3(deri.x, 1.0, deri.y));
+}
+
+void sample (float t, out vec3 samplePos, out vec3 derivative) {
+  float value;
+  vec3 deri;
+  vec2 hashPos = vec2(-time/4.) + 8.0 * vec2(t, index / float(TOTAL_MESHES));
+  noised(hashPos, value, deri);
+  samplePos = vec3(t, 0.14 * value, index / float(TOTAL_MESHES));
+  derivative = deri;
+  // samplePos = vec3(t, 0.14 * noise(vec2(-time/4.) + 8.0 * vec2(t, index / float(TOTAL_MESHES))), index / float(TOTAL_MESHES));
+
+  // vec3 ret = vec3(t, 0.14 * noise(vec2(-time/4.) + 8.0 * vec2(t, index / float(TOTAL_MESHES))), index / float(TOTAL_MESHES));
+  // if(int(index) > int(index) / 2 * 2) return ret.xyz;
+  // return vec3(ret.z, 0.14 * noise(vec2(-time/4.) + 8.0 * vec2(ret.z, ret.x)), ret.x);;
 }
 
 void createTube (float t, vec2 volume, out vec3 offset, out vec3 normal) {
   float nextT = t + (1.0 / float(TOTAL_SEGMENTS));
-  vec3 current = sample(t);
-  vec3 next = sample(nextT);
+  vec3 current, currentDeri;
+  sample(t, current, currentDeri);
+  vec3 next, nextDeri;
+  sample(nextT, next, nextDeri);
 
   // compute the TBN matrix
   vec3 T = normalize(next - current);
-  vec3 B = normalize(cross(T, next + current));
+  // vec3 B = normalize(cross(T, next + current));
+  vec3 B = normalize(cross(T, currentDeri));
   vec3 N = -normalize(cross(B, T));
 
   // extrude outward to create a tube
@@ -72,7 +106,7 @@ void createTube (float t, vec2 volume, out vec3 offset, out vec3 normal) {
 }
 
 void main() {
-  vec2 volume = vec2(thickness * 0.2, thickness * 1.0);
+  vec2 volume = vec2(thickness * 0.1, thickness * 2.0);
   vec3 transformed;
   vec3 objNormal;
 

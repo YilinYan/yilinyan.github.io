@@ -17,14 +17,14 @@ module.exports = (sides = 8, segments = 50, openEnded = false) => {
     const verts = [vertices[a], vertices[b], vertices[c]];
     const uvs = baseGeometry.faceVertexUvs[0][i];  // the first layer of uvs, and the i-th
 
-    if(verts[0].y >= 0 && verts[1].y >= 0 && verts[2].y >= 0) {  // cull out the back side
+    // if(verts[0].y >= 0 && verts[1].y >= 0 && verts[2].y >= 0) {  // cull out the back side
       verts.forEach((pos, j) => {
         const angle = Math.atan2(pos.z, pos.y);
         angles.push(angle);
         postions.push(pos.x + 0.5);  // [-0.5, 0.5] -> [0.0, 1.0]
         UVS.push(uvs[j].toArray());
       })
-    }
+    // }
   });
 
   const angleArray = new Float32Array(angles);

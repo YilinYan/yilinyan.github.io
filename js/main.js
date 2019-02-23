@@ -1,8 +1,10 @@
 const scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.x = camera.position.z = 1.2
-camera.position.y = 0.5
-camera.lookAt(new THREE.Vector3(0,0,0))
+const cameraPos = [1.0, 0.3, 1.0];
+camera.position.x = cameraPos[0];
+camera.position.y = cameraPos[1];
+camera.position.z = cameraPos[2];
+camera.lookAt(new THREE.Vector3(0,0,0));
 var renderer = new THREE.WebGLRenderer({ alpha: true, depth: true });
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor('#000000');
@@ -35,7 +37,8 @@ const baseMaterial = new THREE.RawShaderMaterial({
     time: { type: 'f', value: 0 },
     size: { type: 'f', value: 4.0 },
     sscolor: { type: 'c', value: new THREE.Color('#222262') },
-    index: { type: 'f', value: 0 }
+    index: { type: 'f', value: 0 },
+    cameraPos: { type: 'vec3', value: new THREE.Vector3(cameraPos[0], cameraPos[1], cameraPos[2]) },
   }
 });
 
@@ -51,7 +54,7 @@ const meshes = new Array(totalMeshes).fill(null).map((_, i) => {
   material.uniforms.thickness.value = myRand(0.001, 0.002);  // random thickness
 
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.frustumCulled = false;
+  // mesh.frustumCulled = false;
   meshContainer.add(mesh);
   return mesh;
 });
