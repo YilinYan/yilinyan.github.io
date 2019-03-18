@@ -47,23 +47,24 @@ module.exports = (sides = 8, segments = 50, openEnded = false) => {
   return geometry;
 }
 },{}],2:[function(require,module,exports){
-const height = 900;
+
 const scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / height, 0.01, 1000 );
-var cameraPos = [1.0, 0.3, 1.0];
+const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.01, 1000 );
+const cameraPos = [1.0, 0.3, 1.0];
 camera.position.x = cameraPos[0];
 camera.position.y = cameraPos[1];
 camera.position.z = cameraPos[2];
 camera.lookAt(new THREE.Vector3(0,0,0));
-var renderer = new THREE.WebGLRenderer({ alpha: true, depth: true });
-renderer.setSize( window.innerWidth, height );
+const renderer = new THREE.WebGLRenderer({ alpha: true, depth: true });
+renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor('#000000');
 canvas = renderer.domElement;
 canvas.setAttribute('background', '#000000');
 canvas.setAttribute('opacity', '0.1');
-document.getElementById ("canvas").appendChild(canvas)
+
+document.getElementById ("canvas").appendChild(canvas);
 window.addEventListener('resize', () => {
-  renderer.setSize( window.innerWidth, height );
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
 // create material
