@@ -131,7 +131,7 @@ nav-bar
 
 .page-content {
   padding: 30px 0;
-  min-height: calc(100vh - 550px);
+  min-height: calc(100vh - 330px);
   /* make the height at least 100% viewport height (window.innerHeight) minus 550px (~ size of header + footer) */
 }
 
