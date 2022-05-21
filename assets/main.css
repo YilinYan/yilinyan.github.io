@@ -39,8 +39,9 @@ h4, h5, h6 { font-weight: 200; }
 
 h1, h2, h3 { font-weight: 200; }
 
+
 /** Custom */
-p { letter-spacing: 4px; }
+p { letter-spacing: 2px; }
 td.text { letter-spacing: 4px; }
 .image img { transition: transform .2s; /* Animation */}
 .image:hover img {
@@ -50,6 +51,7 @@ td.text { letter-spacing: 4px; }
 .shadertoy:hover iframe {
   transform: scale(1.2, 1.2);
 }
+
 
 /** Links */
 a { color: #8750ff; text-decoration: none; }
